@@ -1,5 +1,7 @@
 # API Tests Pet Project
 
+![Tests](https://github.com/pennysilv/api-tests-pet-project/workflows/Run%20Tests/badge.svg)
+
 Автотесты для тестирования JSONPlaceholder API с использованием pytest
 
 ## Описание
