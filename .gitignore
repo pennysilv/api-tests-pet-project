@@ -22,3 +22,8 @@ reports/
 # OS
 .DS_Store
 Thumbs.db
+
+# Package info
+*.egg-info/
+dist/
+build/
