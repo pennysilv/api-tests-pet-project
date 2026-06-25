@@ -26,6 +26,7 @@ The tests cover examples around:
 * **pytest** for test execution
 * **requests** for HTTP calls
 * **jsonschema** for response schema validation
+* **Ruff** for linting
 * **pytest-html** for HTML reports
 * **GitHub Actions** for CI execution
 
@@ -167,6 +168,12 @@ API_BASE_URL=https://jsonplaceholder.typicode.com API_TIMEOUT=5 pytest
 
 ## Running Tests
 
+Run lint checks:
+
+```bash
+ruff check .
+```
+
 Run the full test suite:
 
 ```bash
@@ -238,6 +245,12 @@ Generate a custom report:
 pytest -v --html=reports/api_report.html --self-contained-html
 ```
 
+Generate both JUnit XML and an HTML report, matching CI:
+
+```bash
+pytest --junitxml=reports/junit.xml --html=reports/report.html --self-contained-html
+```
+
 The `reports/` directory is intended for generated artifacts and should not be committed.
 
 ## Continuous Integration
@@ -248,15 +261,20 @@ GitHub Actions is configured in:
 .github/workflows/tests.yml
 ```
 
-The workflow installs dependencies and runs the pytest suite on pushes and pull requests to `main`.
+The workflow runs on pushes and pull requests to `main`.
 
-Current CI coverage is intentionally simple. Useful improvements would include:
+CI steps:
 
-* pinning a specific Python version or running a small version matrix;
-* caching pip dependencies;
-* uploading HTML or JUnit test reports as CI artifacts;
-* adding linting with tools such as ruff;
-* separating smoke checks from the full suite.
+* check out the repository;
+* set up Python 3.12;
+* cache pip dependencies;
+* install project dependencies;
+* run Ruff;
+* run pytest;
+* generate JUnit XML and HTML reports;
+* upload generated reports as workflow artifacts.
+
+The workflow fails if Ruff or pytest fails.
 
 ## What This Project Demonstrates For Interviews
 
@@ -269,6 +287,7 @@ This project demonstrates:
 * writing readable positive, negative, parameterized, and boundary-style tests;
 * using JSON Schema validation for important response shapes;
 * validating response status codes and response bodies;
+* running lint checks with Ruff;
 * generating test reports;
 * running tests in CI;
 * understanding the limits of testing against a public fake API.
@@ -282,8 +301,7 @@ Good next improvements include:
 * adding more detailed schemas for nested user fields;
 * loading local `.env` files with `python-dotenv` if desired;
 * adding clearer reusable assertion helpers;
-* adding JUnit XML output for CI;
-* improving CI artifacts and reporting.
+* adding a small Python version matrix in CI if needed.
 
 ## Author
 
