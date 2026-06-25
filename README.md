@@ -1,110 +1,114 @@
-# API Testing Pet Project
+# API Testing Portfolio Project
 
 [![Tests](https://github.com/pennysilv/api-tests-pet-project/actions/workflows/tests.yml/badge.svg)](https://github.com/pennysilv/api-tests-pet-project/actions)
 
-Automated REST API testing project for [JSONPlaceholder](https://jsonplaceholder.typicode.com), built with Python, pytest, and requests.
+Automated REST API testing project built with Python, pytest, and requests.
 
-The project demonstrates API test design, positive and negative testing, boundary-value analysis, parameterization, response validation, and automated test execution.
+This project uses [JSONPlaceholder](https://jsonplaceholder.typicode.com), a fake public REST API, as a stable demo target for practicing and presenting API test automation patterns. It is not intended to prove the quality of a real production backend. The value of the project is in the test structure, reusable client layer, pytest usage, assertions, reporting, and CI setup.
 
-## Project Overview
+## Project Purpose
 
-This repository contains automated tests for the JSONPlaceholder REST API.
+The goal is to demonstrate how a junior QA automation engineer can organize and run API tests against REST endpoints.
 
-The test suite validates user and post endpoints, including:
+The tests cover examples around:
 
-* successful GET requests;
-* resource retrieval by ID;
-* filtering resources by query parameters;
-* POST requests with valid and invalid payloads;
-* handling of non-existent resources;
-* boundary and negative scenarios;
-* validation of related API data.
+* basic API availability checks;
+* response status validation;
+* response body and field validation;
+* simple request payloads;
+* parameterized test cases;
+* boundary-style behavior for known resource IDs;
+* negative examples for resources that do not exist.
 
-## Technology Stack
+## Tech Stack
 
-* **Python 3**
-* **pytest** — test framework
-* **requests** — HTTP client library
-* **pytest-html** — HTML test report generation
-* **GitHub Actions** — automated test execution
+* **Python 3.9+**
+* **pytest** for test execution
+* **requests** for HTTP calls
+* **jsonschema** for response schema validation
+* **pytest-html** for HTML reports
+* **GitHub Actions** for CI execution
 
-## Test Coverage
+## Test Categories
 
-### User Endpoints
+### Smoke
 
-Tests in `test_users.py` cover:
+Fast checks that confirm the main public endpoints respond successfully, such as:
 
-* `GET /users` — retrieve all users;
-* `GET /users/{id}` — retrieve a user by ID;
-* `GET /users/999` — verify handling of a non-existent user;
-* `POST /users` — create a new user.
+* `GET /users`
+* `GET /users/{id}`
+* `GET /posts`
+* `GET /posts/{id}`
 
-### Post Endpoints
+### Contract / Schema-Style Checks
 
-Tests in `test_posts.py` cover:
+The current tests verify expected response fields such as `id`, `name`, `email`, `title`, `body`, and `userId`.
 
-* `GET /posts` — retrieve all posts;
-* `GET /posts/{id}` — retrieve a post by ID;
-* `GET /posts?userId={id}` — retrieve posts associated with a specific user;
-* `POST /posts` — create a new post.
+JSON Schema checks are used for key user and post responses.
 
-### Parameterized Tests
+### CRUD-Style Examples
 
-Tests in `test_parametrized.py` include:
+JSONPlaceholder supports fake write operations, so this project includes examples such as:
 
-* validation of five different user IDs;
-* validation of five different post IDs;
-* negative scenarios with invalid resource IDs;
-* verification of relationships between users and posts.
+* `POST /users`
+* `POST /posts`
+* `PUT /posts/{id}`
+* `PATCH /posts/{id}`
+* `DELETE /posts/{id}`
 
-### Boundary and Input Validation Tests
+These tests demonstrate request construction and response validation. JSONPlaceholder does not persist created resources, so these are not full end-to-end CRUD tests against a real database.
 
-Tests in `test_boundary.py` cover:
+### Boundary Behavior
 
-* minimum and maximum valid IDs;
-* IDs outside the expected range;
-* zero and negative IDs;
-* empty fields;
-* long string values;
-* special characters and Unicode input;
-* SQL-like input strings.
+Boundary-style tests check known valid and invalid resource IDs, for example:
 
-## Test Suite
+* first and last expected user IDs;
+* first and last expected post IDs;
+* zero, negative, and out-of-range IDs.
 
-The project currently contains **40 automated tests**.
+These tests document observed JSONPlaceholder behavior. They should not be interpreted as validation rules for a real backend.
 
-The tests verify:
+## JSONPlaceholder Limitations
 
-* HTTP status codes;
-* JSON response structure;
-* response field values;
-* request and response data consistency;
-* API behaviour for positive, negative, and boundary scenarios.
+JSONPlaceholder is useful for demo automation, but it has important limitations:
+
+* it is a fake public API, not a production system;
+* write operations return successful responses but do not persist data;
+* input validation is intentionally limited;
+* business rules are minimal;
+* data is static and publicly shared;
+* tests depend on internet access and the availability of a third-party service.
+
+Because of this, the project should be read as an automation portfolio sample, not as evidence that a real API has been tested comprehensively.
 
 ## Project Structure
 
 ```text
 api-tests-pet-project/
+├── .github/
+│   └── workflows/
+│       └── tests.yml
+├── config/
+│   ├── __init__.py
+│   └── config.py
+├── .env.example
 ├── tests/
-│   ├── test_users.py
-│   ├── test_posts.py
+│   ├── conftest.py
+│   ├── test_boundary.py
 │   ├── test_parametrized.py
-│   └── test_boundary.py
-├── requirements.txt
+│   ├── test_posts.py
+│   └── test_users.py
+├── utils/
+│   ├── __init__.py
+│   ├── api_client.py
+│   └── schemas.py
 ├── pytest.ini
+├── requirements.txt
+├── setup.py
 └── README.md
 ```
 
-Update this section if the actual repository structure is different.
-
-## Getting Started
-
-### Prerequisites
-
-* Python 3.9 or later
-* Git
-
-### Installation
+## Setup
 
 Clone the repository:
 
@@ -123,81 +127,163 @@ source test_env/bin/activate
 On Windows:
 
 ```powershell
+python -m venv test_env
 test_env\Scripts\activate
 ```
 
-Install the dependencies:
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-If the project is configured as an installable Python package, also run:
+Optionally install the project in editable mode:
 
 ```bash
 pip install -e .
 ```
 
-## Running the Tests
+### Configuration
 
-Run the complete test suite:
+The framework reads configuration from environment variables:
+
+* `API_BASE_URL`
+* `API_TIMEOUT`
+
+Default values are defined in `config/config.py`, so the tests run against JSONPlaceholder without extra setup.
+
+Use `.env.example` as a reference:
+
+```bash
+API_BASE_URL=https://jsonplaceholder.typicode.com
+API_TIMEOUT=10
+```
+
+To override values for one test run:
+
+```bash
+API_BASE_URL=https://jsonplaceholder.typicode.com API_TIMEOUT=5 pytest
+```
+
+## Running Tests
+
+Run the full test suite:
+
+```bash
+pytest
+```
+
+Run with verbose output:
 
 ```bash
 pytest -v
 ```
 
-Run a specific test module:
+Run a specific test file:
 
 ```bash
 pytest tests/test_users.py -v
 ```
 
-Run tests and generate an HTML report:
+Run a specific test by name:
 
 ```bash
-pytest -v --html=report.html --self-contained-html
+pytest tests/test_posts.py::TestPosts::test_get_post_by_id -v
 ```
 
-The generated report will be saved as:
+### Marker-Based Runs
+
+The test suite uses these pytest markers:
+
+* `smoke`
+* `contract`
+* `negative`
+* `regression`
+
+Run selected categories:
+
+```bash
+pytest -m smoke
+pytest -m contract
+pytest -m negative
+pytest -m regression
+```
+
+To exclude slow or broader checks:
+
+```bash
+pytest -m "smoke or contract"
+pytest -m "not regression"
+```
+
+## Reports
+
+The project uses `pytest-html`.
+
+The default pytest configuration generates an HTML report at:
 
 ```text
-report.html
+reports/report.html
 ```
+
+Run tests and generate the default report:
+
+```bash
+pytest
+```
+
+Generate a custom report:
+
+```bash
+pytest -v --html=reports/api_report.html --self-contained-html
+```
+
+The `reports/` directory is intended for generated artifacts and should not be committed.
 
 ## Continuous Integration
 
-The test suite is configured to run automatically with GitHub Actions.
+GitHub Actions is configured in:
 
-The workflow can be used to:
+```text
+.github/workflows/tests.yml
+```
 
-* install project dependencies;
-* execute the pytest test suite;
-* detect test failures on repository updates;
-* verify that the project remains stable after changes.
+The workflow installs dependencies and runs the pytest suite on pushes and pull requests to `main`.
 
-## Key QA Practices Demonstrated
+Current CI coverage is intentionally simple. Useful improvements would include:
 
-* REST API testing
-* Positive and negative testing
-* Boundary-value analysis
-* Parameterized testing
-* HTTP status code validation
-* JSON response validation
-* Test data validation
-* Automated test reporting
-* Continuous integration
+* pinning a specific Python version or running a small version matrix;
+* caching pip dependencies;
+* uploading HTML or JUnit test reports as CI artifacts;
+* adding linting with tools such as ruff;
+* separating smoke checks from the full suite.
+
+## What This Project Demonstrates For Interviews
+
+This project demonstrates:
+
+* organizing API tests with pytest;
+* using fixtures for a reusable API client;
+* reading base URL and timeout settings from environment variables;
+* separating configuration, utilities, and test cases;
+* writing readable positive, negative, parameterized, and boundary-style tests;
+* using JSON Schema validation for important response shapes;
+* validating response status codes and response bodies;
+* generating test reports;
+* running tests in CI;
+* understanding the limits of testing against a public fake API.
+
+It is a compact portfolio project, not a complete enterprise API framework.
 
 ## Possible Improvements
 
-Future improvements may include:
+Good next improvements include:
 
-* adding `PUT`, `PATCH`, and `DELETE` request coverage;
-* introducing reusable fixtures for test data and API clients;
-* adding JSON Schema validation;
-* separating configuration from test logic;
-* generating Allure reports;
-* adding test execution for multiple Python versions;
-* expanding response-time and performance checks.
+* adding more detailed schemas for nested user fields;
+* loading local `.env` files with `python-dotenv` if desired;
+* adding clearer reusable assertion helpers;
+* adding JUnit XML output for CI;
+* improving CI artifacts and reporting.
 
 ## Author
 
