@@ -3,16 +3,22 @@ requires = ["setuptools>=69"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "python-api-test-framework"
+name = "rest-api-test-automation"
 version = "1.0.0"
-description = "A lightweight REST API automation framework built with Python, pytest and requests."
+description = "REST API test automation with Python, pytest and requests."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "jsonschema==4.23.0",
+    "requests==2.32.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pre-commit==4.0.1",
     "pytest==8.3.4",
     "pytest-html==4.1.1",
-    "requests==2.32.3",
+    "ruff==0.8.6",
 ]
 
 [tool.setuptools.packages.find]
