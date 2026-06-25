@@ -43,7 +43,7 @@ class TestParametrized:
 
     @pytest.mark.regression
     @pytest.mark.parametrize(
-        "user_id,expected_posts_count",
+        ("user_id", "expected_posts_count"),
         [
             (1, 10),
             (2, 10),
