@@ -115,6 +115,21 @@ Optional local pre-commit setup:
 pre-commit install
 ```
 
+Run all pre-commit hooks manually:
+
+```bash
+pre-commit run --all-files
+```
+
+Configured hooks include:
+
+- Ruff linting with automatic fixes;
+- Ruff formatting;
+- trailing whitespace cleanup;
+- end-of-file fixing;
+- YAML syntax checks;
+- TOML syntax checks.
+
 ## Configuration
 
 The framework reads configuration from environment variables:
