@@ -44,7 +44,7 @@ class TestUsers:
         new_user = {
             "name": "Test User",
             "username": "testuser",
-            "email": "test@example.com"
+            "email": "test@example.com",
         }
 
         response = api_client.post(Config.USERS_ENDPOINT, json=new_user)

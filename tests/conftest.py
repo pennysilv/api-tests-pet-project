@@ -1,8 +1,8 @@
 import logging
 
 import pytest
-from utils.api_client import APIClient
 
+from utils.api_client import APIClient
 
 logging.basicConfig(
     level=logging.INFO,

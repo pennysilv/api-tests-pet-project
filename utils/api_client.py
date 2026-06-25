@@ -2,8 +2,8 @@ import logging
 from urllib.parse import urljoin
 
 import requests
-from config.config import Config
 
+from config.config import Config
 
 logger = logging.getLogger(__name__)
 

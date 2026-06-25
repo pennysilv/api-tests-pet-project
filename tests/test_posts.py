@@ -53,7 +53,7 @@ class TestPosts:
         new_post = {
             "title": "Test Post Title",
             "body": "This is a test post body",
-            "userId": 1
+            "userId": 1,
         }
 
         response = api_client.post(Config.POSTS_ENDPOINT, json=new_post)
@@ -73,7 +73,7 @@ class TestPosts:
             "id": 1,
             "title": "Updated Test Title",
             "body": "Updated body",
-            "userId": 1
+            "userId": 1,
         }
 
         response = api_client.put(f"{Config.POSTS_ENDPOINT}/1", json=updated_post)

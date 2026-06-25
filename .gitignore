@@ -8,6 +8,7 @@ venv/
 test_env/
 env/
 ENV/
+.venv/
 
 # IDE
 .vscode/
@@ -18,6 +19,8 @@ ENV/
 # Reports
 reports/
 *.html
+.pytest_cache/
+.ruff_cache/
 
 # OS
 .DS_Store

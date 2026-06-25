@@ -42,11 +42,14 @@ class TestParametrized:
         api_client.assert_status_code(response, 404)
 
     @pytest.mark.regression
-    @pytest.mark.parametrize("user_id,expected_posts_count", [
-        (1, 10),
-        (2, 10),
-        (3, 10),
-    ])
+    @pytest.mark.parametrize(
+        "user_id,expected_posts_count",
+        [
+            (1, 10),
+            (2, 10),
+            (3, 10),
+        ],
+    )
     def test_user_posts_count(self, api_client, user_id, expected_posts_count):
         """Known users have ten posts in JSONPlaceholder's static data set."""
         response = api_client.get(Config.POSTS_ENDPOINT, params={"userId": user_id})
